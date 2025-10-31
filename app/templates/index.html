@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Budget Tracker - Major Project{% endblock %}
+
+{% block content %}
+    <!-- Header Section -->
+    <header>
+        <h1>Personal Budget Tracker</h1>
+        <p>A comprehensive financial management system for tracking income, expenses, and spending analysis</p>
+    </header>
+
+    <!-- Budget Alert Container -->
+    <div id="budgetAlertContainer" style="margin-bottom: 20px;"></div>
+
+    <!-- Project Information -->
+    <div class="project-info">
+        <div class="info-box">
+            <h3>Project Title</h3>
+            <p>Personal Budget Tracker</p>
+        </div>
+        <div class="info-box">
+            <h3>Roll No</h3>
+            <p>024MCA160589</p>
+        </div>
+        <div class="info-box">
+            <h3>Programme</h3>
+            <p>Master of Computer Applications</p>
+        </div>
+        <div class="info-box">
+            <h3>Semester</h3>
+            <p>Fourth Semester</p>
+        </div>
+        <div class="info-box">
+            <h3>Technology Stack</h3>
+            <p>Python, Flask, Pandas, Matplotlib</p>
+        </div>
+        <div class="info-box">
+            <h3>Institution</h3>
+            <p>Chandigarh University</p>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <!-- Add Transaction Card -->
+        <div class="card">
+            <h2>Add Transaction</h2>
+            <div id="message"></div>
+            
+            <div class="form-group">
+                <label>Type</label>
+                <select id="transactionType">
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Amount ($)</label>
+                <input type="number" id="amount" placeholder="0.00" step="0.01" min="0">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <input type="text" id="category" placeholder="e.g., Food, Salary">
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="description" placeholder="e.g., Grocery shopping">
+            </div>
+
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="date">
+            </div>
+
+            <button onclick="addTransaction()">Add Transaction</button>
+        </div>
+
+        <!-- Monthly Report Card -->
+        <div class="card">
+            <h2>Monthly Report</h2>
+            
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" id="reportYear" placeholder="2025" min="2000" max="2099">
+            </div>
+
+            <div class="form-group">
+                <label>Month</label>
+                <select id="reportMonth">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="getMonthlyReport()">Get Report</button>
+                <button onclick="exportMonthlyReportCSV()" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">📥 Export as CSV</button>
+            </div>
+
+            <div id="reportStats" class="stats-grid" style="display: none; margin-top: 20px;">
+                <div class="stat-box">
+                    <h3>Total Income</h3>
+                    <div class="amount" id="reportIncome">$0.00</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Total Expenses</h3>
+                    <div class="amount" id="reportExpenses">$0.00</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Balance</h3>
+                    <div class="amount" id="reportBalance">$0.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions & Analysis -->
+    <div class="card full-width">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('transactions')">All Transactions</button>
+            <button class="tab-btn" onclick="switchTab('analysis')">Category Analysis</button>
+            <button class="tab-btn" onclick="switchTab('charts')">Reports</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <h3 style="margin-bottom: 20px; color: #2c3e50;">Quick Overview</h3>
+            <div id="dashboardContainer"></div>
+        </div>
+
+        <!-- Transactions Tab -->
+        <div id="transactions" class="tab-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <button onclick="loadTransactions()">Refresh Transactions</button>
+                <button onclick="exportAllTransactionsCSV()" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">📥 Export as CSV</button>
+            </div>
+            <div id="transactionsContainer"></div>
+        </div>
+
+        <!-- Analysis Tab -->
+        <div id="analysis" class="tab-content">
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" id="analysisYear" placeholder="2025" min="2000" max="2099">
+            </div>
+            <div class="form-group">
+                <label>Month</label>
+                <select id="analysisMonth">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="getCategoryAnalysis()">Get Analysis</button>
+                <button onclick="exportCategoryAnalysisCSV()" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">📥 Export as CSV</button>
+            </div>
+            <div id="analysisContainer" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- Charts Tab -->
+        <div id="charts" class="tab-content">
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" id="chartYear" placeholder="2025" min="2000" max="2099">
+            </div>
+            <div class="form-group">
+                <label>Month</label>
+                <select id="chartMonth">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="getChart('category')">Category Pie Chart</button>
+                <button onclick="getChart('income-vs-expense')">Income vs Expense</button>
+            </div>
+            <div id="chartsContainer" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+{% endblock %}

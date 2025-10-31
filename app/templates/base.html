@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Personal Budget Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <h1>💰 Budget Tracker</h1>
+            <ul class="nav-links">
+                <a onclick="switchTab('dashboard')">Dashboard</a>
+                <a onclick="switchTab('transactions')">Transactions</a>
+                <a onclick="switchTab('analysis')">Analysis</a>
+                <a onclick="switchTab('charts')">Reports</a>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Personal Budget Tracker | Major Project (024MCA160589) | Master of Computer Applications | Chandigarh University</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

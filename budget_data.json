@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "type": "income",
+      "amount": 400.0,
+      "category": "food",
+      "description": "gsxgdh",
+      "date": "2025-10-26"
+    },
+    {
+      "type": "expense",
+      "amount": 40.0,
+      "category": "suta",
+      "description": "cigerate",
+      "date": "2025-10-26"
+    },
+    {
+      "type": "income",
+      "amount": 999.98,
+      "category": "INCome",
+      "description": "INCOME",
+      "date": "2025-10-26"
+    }
+  ]
+}
